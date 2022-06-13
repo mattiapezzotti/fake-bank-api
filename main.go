@@ -73,6 +73,17 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 	router := gin.Default()
 
+	router.LoadHTMLGlob("web/*")
+	router.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", gin.H{	
+		})
+	})
+
+	router.GET("/transfer", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "transfer.html", gin.H{	
+		})
+	})
+
 	router.GET("/api/account", getAccounts)
 	router.POST("/api/account", postAccount)
 	router.DELETE("/api/account", deleteAccount)
@@ -101,17 +112,17 @@ func getAccounts(c *gin.Context) {
 
 	err := driver.Open(Account{}).Get().AsEntity(&accounts)
 	if len(accounts) == 0 {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "No Account in Database"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "No Account in Database"})
 		log.Print(err)
 		return
 	}
 	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
 
-	c.IndentedJSON(http.StatusOK, gin.H{"success": "Accounts retreived correctly", "accounts": accounts})
+	c.IndentedJSON(http.StatusOK, gin.H{"message": "Accounts retreived correctly", "accounts": accounts})
 }
 
 /*
@@ -126,13 +137,13 @@ func postAccount(c *gin.Context) {
 	var newAccount Account
 
 	if err := c.BindJSON(&newAccount); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
 
 	if strings.TrimSpace(newAccount.Surname) == "" || strings.TrimSpace(newAccount.Name) == "" {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Missing Name or Surname"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Missing Name or Surname"})
 		return
 	}
 
@@ -142,12 +153,12 @@ func postAccount(c *gin.Context) {
 	driver := database()
 
 	if err := driver.Insert(newAccount); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, gin.H{"success": "Account Created", "newAccount": newAccount})
+	c.IndentedJSON(http.StatusCreated, gin.H{"message": "Account Created", "newAccount": newAccount})
 }
 
 /*
@@ -158,13 +169,13 @@ func deleteAccount(c *gin.Context) {
 	var deleted Account
 
 	if err := c.BindJSON(&toDelete); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
 
 	if (!checkID(toDelete.AccountID)){
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "ID not valid"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID not valid"})
 		return
 	}
 
@@ -172,17 +183,17 @@ func deleteAccount(c *gin.Context) {
 
 	if err := driver.Open(Account{}).Where("id", "=", toDelete.AccountID).First().AsEntity(&deleted); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
 		return
 	}
 
 	if err := driver.Delete(toDelete); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, gin.H{"success": "Account Deleted", "deletedUser": deleted})
+	c.IndentedJSON(http.StatusCreated, gin.H{"message": "Account Deleted", "deletedUser": deleted})
 }
 
 /****** api/account/{accountID} ******/
@@ -202,7 +213,7 @@ func getAccountByID(c *gin.Context) {
 	id := c.Param("id")
 
 	if (!checkID(id)){
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "ID not valid"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID not valid"})
 		return
 	}
 
@@ -214,14 +225,14 @@ func getAccountByID(c *gin.Context) {
 
 	if err := driver.Open(Account{}).Where("id", "=", id).First().AsEntity(&foundAccount); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
 		return
 	}
 
 	var s = foundAccount.Name + ";" + foundAccount.Surname
 
 	c.Header("X-Sistema-Bancario", s)
-	c.IndentedJSON(http.StatusCreated, gin.H{"success": "Account Found", "account": foundAccount,
+	c.IndentedJSON(http.StatusCreated, gin.H{"message": "Account Found", "account": foundAccount,
 		"In-Transaction": transazioniIn, "Out-Transaction": trasazioniOut})
 }
 
@@ -239,7 +250,7 @@ func versamento_prelievo(c *gin.Context) {
 	id := c.Param("id")
 
 	if (!checkID(id)){
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "ID not valid"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID not valid"})
 		return
 	}
 
@@ -249,7 +260,7 @@ func versamento_prelievo(c *gin.Context) {
 	newMovimento.Time = time.Now()
 
 	if err := c.BindJSON(&newMovimento); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
@@ -258,29 +269,29 @@ func versamento_prelievo(c *gin.Context) {
 
 	if err := driver.Open(Account{}).Where("id", "=", id).First().AsEntity(&account); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
 		return
 	}
 
 	if newMovimento.Amount+account.Balance < 0 {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Insufficent Funds"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Insufficent Funds"})
 		return
 	}
 
 	if err := driver.Insert(newMovimento); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
 
 	account.Balance += newMovimento.Amount
 	if err := driver.Update(account); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, gin.H{"success": "Transaction Completed", "id": newMovimento.MovimentoID, "newBalance": account.Balance})
+	c.IndentedJSON(http.StatusCreated, gin.H{"message": "Transaction Completed", "id": newMovimento.MovimentoID, "newBalance": account.Balance})
 }
 
 /*
@@ -295,12 +306,12 @@ func updateWholeOwner(c *gin.Context) {
 	id := c.Param("id")
 
 	if (!checkID(id)){
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "ID not valid"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID not valid"})
 		return
 	}
 
 	if err := c.BindJSON(&accountToUpdate); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
@@ -309,7 +320,7 @@ func updateWholeOwner(c *gin.Context) {
 	var newSurname = accountToUpdate.Surname
 
 	if strings.TrimSpace(newSurname) == "" || strings.TrimSpace(newName) == "" {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Missing Name or Surname"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Missing Name or Surname"})
 		return
 	}
 
@@ -317,7 +328,7 @@ func updateWholeOwner(c *gin.Context) {
 
 	if err := driver.Open(Account{}).Where("id", "=", id).First().AsEntity(&accountToUpdate); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
 		return
 	}
 
@@ -325,12 +336,12 @@ func updateWholeOwner(c *gin.Context) {
 	accountToUpdate.Surname = newSurname
 
 	if err := driver.Update(accountToUpdate); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, gin.H{"success": "Account Updated", "updatedAccount": accountToUpdate})
+	c.IndentedJSON(http.StatusCreated, gin.H{"message": "Account Updated", "updatedAccount": accountToUpdate})
 }
 
 /*
@@ -345,12 +356,12 @@ func updateOwner(c *gin.Context) {
 	id := c.Param("id")
 
 	if (!checkID(id)){
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "ID not valid"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID not valid"})
 		return
 	}
 
 	if err := c.BindJSON(&accountToUpdate); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
@@ -359,12 +370,12 @@ func updateOwner(c *gin.Context) {
 	var newSurname = accountToUpdate.Surname
 
 	if strings.TrimSpace(newSurname) == "" && strings.TrimSpace(newName) == "" {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Missing Name or Surname"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Missing Name or Surname"})
 		return
 	}
 
 	if strings.TrimSpace(newSurname) != "" && strings.TrimSpace(newName) != "" {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Invalid Input: only one parameter admitted"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid Input: only one parameter admitted"})
 		return
 	}
 
@@ -378,7 +389,7 @@ func updateOwner(c *gin.Context) {
 
 	if err := driver.Open(Account{}).Where("id", "=", id).First().AsEntity(&accountToUpdate); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
 		return
 	}
 
@@ -389,12 +400,12 @@ func updateOwner(c *gin.Context) {
 	}
 
 	if err := driver.Update(accountToUpdate); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, gin.H{"success": "Account Updated", "updatedAccount": accountToUpdate})
+	c.IndentedJSON(http.StatusCreated, gin.H{"message": "Account Updated", "updatedAccount": accountToUpdate})
 }
 
 /*
@@ -407,7 +418,7 @@ func getOwner(c *gin.Context) {
 	id := c.Param("id")
 
 	if (!checkID(id)){
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "ID not valid"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID not valid"})
 		return
 	}
 
@@ -415,7 +426,7 @@ func getOwner(c *gin.Context) {
 
 	if err := driver.Open(Account{}).Where("id", "=", id).First().AsEntity(&foundAccount); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
 		return
 	}
 
@@ -447,18 +458,18 @@ func trasferimentoDenaro(c *gin.Context) {
 	newMovimento.Time = time.Now()
 
 	if err := c.BindJSON(&newMovimento); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
 
 	if newMovimento.Amount < 0 {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Amount must be positive"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Amount must be positive"})
 		return
 	}
 
 	if (!checkID(newMovimento.From) || !checkID(newMovimento.To)){
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "ID not valid"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID not valid"})
 		return
 	}
 
@@ -466,23 +477,23 @@ func trasferimentoDenaro(c *gin.Context) {
 
 	if err := driver.Open(Account{}).Where("id", "=", newMovimento.From).First().AsEntity(&fromAccount); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
 		return
 	}
 
 	if err := driver.Open(Account{}).Where("id", "=", newMovimento.To).First().AsEntity(&toAccount); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
 		return
 	}
 
 	if fromAccount.Balance-newMovimento.Amount < 0 {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Insufficent Funds"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Insufficent Funds"})
 		return
 	}
 
 	if err := driver.Insert(newMovimento); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
@@ -490,18 +501,18 @@ func trasferimentoDenaro(c *gin.Context) {
 	toAccount.Balance += newMovimento.Amount
 	fromAccount.Balance -= newMovimento.Amount
 	if err := driver.Update(toAccount); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
 
 	if err := driver.Update(fromAccount); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, gin.H{"success": "Transaction Completed", "id": newMovimento.MovimentoID,
+	c.IndentedJSON(http.StatusCreated, gin.H{"message": "Transaction Completed", "id": newMovimento.MovimentoID,
 		"senderID": fromAccount.AccountID, "senderNewBalance": fromAccount.Balance,
 		"receiverID": toAccount.AccountID, "receiverNewBalance": toAccount.Balance,
 	})
@@ -526,7 +537,7 @@ func giraTrasnazione(c *gin.Context) {
 	newMovimento.Time = time.Now()
 
 	if err := c.BindJSON(&foundMovimento); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
@@ -535,19 +546,19 @@ func giraTrasnazione(c *gin.Context) {
 
 	if err := driver.Open(Movimento{}).Where("id", "=", foundMovimento.MovimentoID.String()).First().AsEntity(&foundMovimento); err != nil {
 		//log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
 		return
 	}
 
 	if err := driver.Open(Account{}).Where("id", "=", foundMovimento.From).First().AsEntity(&toAccount); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
 		return
 	}
 
 	if err := driver.Open(Account{}).Where("id", "=", foundMovimento.To).First().AsEntity(&fromAccount); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
 		return
 	}
 
@@ -556,12 +567,12 @@ func giraTrasnazione(c *gin.Context) {
 	newMovimento.Amount = foundMovimento.Amount
 
 	if fromAccount.Balance-newMovimento.Amount < 0 {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Insufficent Funds"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Insufficent Funds"})
 		return
 	}
 
 	if err := driver.Insert(newMovimento); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
@@ -569,18 +580,18 @@ func giraTrasnazione(c *gin.Context) {
 	toAccount.Balance += newMovimento.Amount
 	fromAccount.Balance -= newMovimento.Amount
 	if err := driver.Update(toAccount); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
 
 	if err := driver.Update(fromAccount); err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "An Error as Occurred"})
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "An Error as Occurred"})
 		log.Print(err)
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, gin.H{"success": "Transaction Reverted", "id": newMovimento.MovimentoID,
+	c.IndentedJSON(http.StatusCreated, gin.H{"message": "Transaction Reverted", "id": newMovimento.MovimentoID,
 		"senderID": fromAccount.AccountID, "senderNewBalance": fromAccount.Balance,
 		"receiverID": toAccount.AccountID, "receiverNewBalance": toAccount.Balance,
 	})

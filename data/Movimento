@@ -1,0 +1,23 @@
+[
+	{
+		"amount": 100,
+		"from": "Unknown",
+		"id": "3eceff6c-d343-4e17-be8e-34c31e80b970",
+		"timestamp": "2022-06-12T16:14:04.5427526+02:00",
+		"to": "4415cca4bae9755a66ba"
+	},
+	{
+		"amount": 10,
+		"from": "4415cca4bae9755a66ba",
+		"id": "8570f690-24d9-4f8e-a765-dcdca1028dde",
+		"timestamp": "2022-06-12T16:15:24.105397+02:00",
+		"to": "3d45792992f3d5d8a553"
+	},
+	{
+		"id": "a55151bb-02f3-4cdf-a523-5a138270fa1d",
+		"from": "3d45792992f3d5d8a553",
+		"to": "4415cca4bae9755a66ba",
+		"amount": 10,
+		"timestamp": "2022-06-12T16:15:35.344838+02:00"
+	}
+]
