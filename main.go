@@ -219,9 +219,9 @@ func getAccountByID(c *gin.Context) {
 
 	driver := database()
 
-	driver.Open(Movimento{}).Where("from", "=", id).AsEntity(&trasazioniOut)
+	driver.Open(Movimento{}).Where("from", "=", id).Get().AsEntity(&trasazioniOut)
 
-	driver.Open(Movimento{}).Where("to", "=", id).AsEntity(&transazioniIn)
+	driver.Open(Movimento{}).Where("to", "=", id).Get().AsEntity(&transazioniIn)
 
 	if err := driver.Open(Account{}).Where("id", "=", id).First().AsEntity(&foundAccount); err != nil {
 		log.Print(err)
