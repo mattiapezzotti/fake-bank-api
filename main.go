@@ -175,7 +175,7 @@ func deleteAccount(c *gin.Context) {
 	}
 
 	if (!checkID(toDelete.AccountID)){
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID not valid"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID not valid"})
 		return
 	}
 
@@ -183,7 +183,7 @@ func deleteAccount(c *gin.Context) {
 
 	if err := driver.Open(Account{}).Where("id", "=", toDelete.AccountID).First().AsEntity(&deleted); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID does not exist"})
 		return
 	}
 
@@ -213,7 +213,7 @@ func getAccountByID(c *gin.Context) {
 	id := c.Param("id")
 
 	if (!checkID(id)){
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID not valid"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID not valid"})
 		return
 	}
 
@@ -225,7 +225,7 @@ func getAccountByID(c *gin.Context) {
 
 	if err := driver.Open(Account{}).Where("id", "=", id).First().AsEntity(&foundAccount); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID does not exist"})
 		return
 	}
 
@@ -250,7 +250,7 @@ func versamento_prelievo(c *gin.Context) {
 	id := c.Param("id")
 
 	if (!checkID(id)){
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID not valid"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID not valid"})
 		return
 	}
 
@@ -269,12 +269,12 @@ func versamento_prelievo(c *gin.Context) {
 
 	if err := driver.Open(Account{}).Where("id", "=", id).First().AsEntity(&account); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID does not exist"})
 		return
 	}
 
 	if newMovimento.Amount+account.Balance < 0 {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Insufficent Funds"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: Insufficent Funds"})
 		return
 	}
 
@@ -306,7 +306,7 @@ func updateWholeOwner(c *gin.Context) {
 	id := c.Param("id")
 
 	if (!checkID(id)){
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID not valid"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID not valid"})
 		return
 	}
 
@@ -328,7 +328,7 @@ func updateWholeOwner(c *gin.Context) {
 
 	if err := driver.Open(Account{}).Where("id", "=", id).First().AsEntity(&accountToUpdate); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID does not exist"})
 		return
 	}
 
@@ -356,7 +356,7 @@ func updateOwner(c *gin.Context) {
 	id := c.Param("id")
 
 	if (!checkID(id)){
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID not valid"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID not valid"})
 		return
 	}
 
@@ -389,7 +389,7 @@ func updateOwner(c *gin.Context) {
 
 	if err := driver.Open(Account{}).Where("id", "=", id).First().AsEntity(&accountToUpdate); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID does not exist"})
 		return
 	}
 
@@ -418,7 +418,7 @@ func getOwner(c *gin.Context) {
 	id := c.Param("id")
 
 	if (!checkID(id)){
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID not valid"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID not valid"})
 		return
 	}
 
@@ -426,7 +426,7 @@ func getOwner(c *gin.Context) {
 
 	if err := driver.Open(Account{}).Where("id", "=", id).First().AsEntity(&foundAccount); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID does not exist"})
 		return
 	}
 
@@ -463,13 +463,18 @@ func trasferimentoDenaro(c *gin.Context) {
 		return
 	}
 
-	if newMovimento.Amount < 0 {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Amount must be positive"})
+	if newMovimento.From == newMovimento.To {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: Cannot self transfer"})
+		return
+	}
+
+	if newMovimento.Amount <= 0 {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: Amount must be positive"})
 		return
 	}
 
 	if (!checkID(newMovimento.From) || !checkID(newMovimento.To)){
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID not valid"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID not valid"})
 		return
 	}
 
@@ -477,18 +482,18 @@ func trasferimentoDenaro(c *gin.Context) {
 
 	if err := driver.Open(Account{}).Where("id", "=", newMovimento.From).First().AsEntity(&fromAccount); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID does not exist"})
 		return
 	}
 
 	if err := driver.Open(Account{}).Where("id", "=", newMovimento.To).First().AsEntity(&toAccount); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID does not exist"})
 		return
 	}
 
 	if fromAccount.Balance-newMovimento.Amount < 0 {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Insufficent Funds"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: Insufficent Funds"})
 		return
 	}
 
@@ -546,19 +551,19 @@ func giraTrasnazione(c *gin.Context) {
 
 	if err := driver.Open(Movimento{}).Where("id", "=", foundMovimento.MovimentoID.String()).First().AsEntity(&foundMovimento); err != nil {
 		//log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID does not exist"})
 		return
 	}
 
 	if err := driver.Open(Account{}).Where("id", "=", foundMovimento.From).First().AsEntity(&toAccount); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID does not exist"})
 		return
 	}
 
 	if err := driver.Open(Account{}).Where("id", "=", foundMovimento.To).First().AsEntity(&fromAccount); err != nil {
 		log.Print(err)
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "ID does not exist"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID does not exist"})
 		return
 	}
 
@@ -567,7 +572,7 @@ func giraTrasnazione(c *gin.Context) {
 	newMovimento.Amount = foundMovimento.Amount
 
 	if fromAccount.Balance-newMovimento.Amount < 0 {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Insufficent Funds"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: Insufficent Funds"})
 		return
 	}
 

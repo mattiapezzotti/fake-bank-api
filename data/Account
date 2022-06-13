@@ -1,9 +1,9 @@
 [
 	{
-		"balance": 100,
 		"id": "5d1d7ea3316b8dc43753",
 		"name": "Mattia",
-		"surname": "Pezzotti"
+		"surname": "Pezzotti",
+		"balance": 99
 	},
 	{
 		"balance": 0,
@@ -12,9 +12,9 @@
 		"surname": "Cancelli"
 	},
 	{
+		"balance": 96,
 		"id": "9629d86528eed6d9c5b8",
 		"name": "Samuel",
-		"surname": "Bertagna",
-		"balance": 100
+		"surname": "Bertagna"
 	}
 ]
