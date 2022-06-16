@@ -1,0 +1,20 @@
+[
+	{
+		"id": "b62aaa4653e7d8472a36",
+		"name": "Mattia",
+		"surname": "Pezzotti",
+		"balance": 40
+	},
+	{
+		"balance": 10,
+		"id": "63735acf21d99a38de34",
+		"name": "Lorenzo",
+		"surname": "Pezzotti"
+	},
+	{
+		"balance": 50,
+		"id": "5cf7f498467c38cff2cb",
+		"name": "Gabriele",
+		"surname": "Pezzotti"
+	}
+]

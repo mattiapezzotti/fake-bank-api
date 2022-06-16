@@ -98,7 +98,7 @@ func main() {
 
 	router.POST("/api/divert", giraTrasnazione)
 
-	router.Run("localhost:4000")
+	router.Run("0.0.0.0:4000")
 }
 
 /****** api/account ******/

@@ -1,0 +1,51 @@
+[
+	{
+		"amount": 100,
+		"from": "Unknown",
+		"id": "1359b243-c360-4cc9-8be5-89289dcbfd27",
+		"timestamp": "2022-06-15T16:15:53.2018266+02:00",
+		"to": "5cf7f498467c38cff2cb"
+	},
+	{
+		"amount": 200,
+		"from": "Unknown",
+		"id": "0a858fcf-e594-4f2d-845c-b8c1e751ac93",
+		"timestamp": "2022-06-15T16:15:56.3935789+02:00",
+		"to": "5cf7f498467c38cff2cb"
+	},
+	{
+		"amount": -200,
+		"from": "Unknown",
+		"id": "64cb4cfc-0dd4-44a6-863d-9a6f5557a297",
+		"timestamp": "2022-06-15T16:15:59.3030842+02:00",
+		"to": "5cf7f498467c38cff2cb"
+	},
+	{
+		"amount": 50,
+		"from": "5cf7f498467c38cff2cb",
+		"id": "6e8d6d84-da2d-4c6e-b074-28fe3a3f10e9",
+		"timestamp": "2022-06-15T16:21:33.3266803+02:00",
+		"to": "b62aaa4653e7d8472a36"
+	},
+	{
+		"amount": 50,
+		"from": "b62aaa4653e7d8472a36",
+		"id": "3318dbe3-8047-4378-85a8-e7265eec1e83",
+		"timestamp": "2022-06-15T16:21:44.9449518+02:00",
+		"to": "5cf7f498467c38cff2cb"
+	},
+	{
+		"amount": 50,
+		"from": "5cf7f498467c38cff2cb",
+		"id": "d38059ea-a06e-45e4-b515-73dfb4917f4f",
+		"timestamp": "2022-06-15T16:26:06.1514084+02:00",
+		"to": "b62aaa4653e7d8472a36"
+	},
+	{
+		"id": "54ec71f6-5efa-48f4-af70-af0e6ce08a0f",
+		"from": "b62aaa4653e7d8472a36",
+		"to": "63735acf21d99a38de34",
+		"amount": 10,
+		"timestamp": "2022-06-15T16:59:17.3958004+02:00"
+	}
+]
