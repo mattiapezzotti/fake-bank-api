@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <title>Intesa San Mattia</title>
+</head>
+<body>
+    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+        <div class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item" href="/">
+              Root
+            </a>
+            <a class="navbar-item" href="/transfer">
+              Transfer
+            </a>
+        </div>
+      </nav>
+      
+    <section class="section">
+        <div class="container">
+
+        <h1 class="title">
+            Intesa San Mattia
+        </h1>
+
+        <div class="columns">
+            <div class="column">
+                <input class="input is-primary" type="text" placeholder="From" id="from">
+            </div>
+            <div class="column">
+                <input class="input is-primary" type="text" placeholder="To" id="to">
+            </div>
+            <div class="column">
+                <input class="input is-primary" type="text" placeholder="Ammontare" id="soldi">
+            </div>
+        </div>
+
+        <button onclick="transferMoney()" class="button is-primary mb-3 is-fullwidth">Invia Denaro!</button>
+
+        <div id="result">
+        </div>
+    </section>
+</body>
+<script>
+    function transferMoney(){
+        const textArea = document.getElementById("result")
+        const url = "/api/transfer"
+
+        const data = {
+            "from" : document.getElementById("from").value,
+            "to" : document.getElementById("to").value,
+            "amount" : parseFloat(document.getElementById("soldi").value)
+        }
+
+        if(data.from === "" || data.to === ""){
+            textArea.setAttribute("class", "notification is-danger")
+            textArea.innerHTML = "Error: Inserire ID Mittente e Destinatario"
+            return
+        }
+
+        if(!check(data.from) || !check(data.to)){
+            textArea.setAttribute("class", "notification is-danger")
+            textArea.innerHTML = "Error: Ricontrolla gli ID inseriti e riprova"
+            return
+        }
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(json => {
+            if(json['message'].includes("error") || json['message'].includes("Error")){
+                textArea.setAttribute("class", "notification is-danger")
+            }
+            else textArea.setAttribute("class", "notification is-success")
+            
+            textArea.innerHTML = json['message']
+        })
+    }
+
+    function check(id){
+    let pattern = /[0-9A-Fa-f]{20}/g
+    console.log(id.match(pattern))
+    return (id.match(pattern) && id.length == 20) 
+}
+</script>
+</html>
