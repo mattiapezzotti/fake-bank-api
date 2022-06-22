@@ -1,6 +1,7 @@
 # Istruzioni
 
-## Building from source
+## Building from Source
+Codice sorgente reperibile in questa [Repo Github](https://github.com/mattiapezzotti/example-api).
 ### GO
 1. Installare **GO**, seguendo le istruzioni riportate nel [sito ufficiale](https://go.dev/doc/install).
 
@@ -20,13 +21,22 @@ Generalmente sono scaricabili tramite il comando
 ```
 $ go get [github-link]
 ```
+Se ancora ci sono problemi provare i comendi
+```
+$ go tidy mod
+$ go build .
+```
 
-## Docker
-In alternativa è possibile utilizzare una immagine docker, reperibile da terminale come 
+## Running with Docker
+1. Scaricare, installare e aprire [Docker Desktop](https://www.docker.com/products/docker-desktop/) sulla propria macchina.
+    
+2. Scegliere se:
+- Scaricare l' immagine docker ed eseguire il procedimento riportato sopra. L'immagine è reperibile da terminale con 
 ```
 $ docker pull mattiapezzotti/pezzotti-api
 ``` 
-o direttamente runnable con il comando
+- Eseguire direttamente il runnabile da Docker Hub con il comando
+  
 ```
 $ docker run -dp 4000:4000 mattiapezzotti/pezzotti-api
 ```
