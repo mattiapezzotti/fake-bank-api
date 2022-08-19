@@ -3,7 +3,7 @@
 ## Scritto in
 Il progetto è stato scritto in **GOLANG** per la parte di *Backend* con il Framework **GinGonic**, l'embedded database creato **Simbd** creato da *Sony Arouje* e la libreria di supporto **UUID** per la generazione di questi.
 
-Per la parte di *Frontend* è stato utilizzato **HTML+CSS+JS** (con CSS gentilmente gestito da [Bulma](https://bulma.io/)) senza framework JS per evitare che il bundle risultasse troppo pesante 
+Per la parte di *Frontend* è stato utilizzato **HTML+CSS+JS** (con CSS gentilmente gestito da [Bulma](https://bulma.io/)) senza framework JS.
 
 
 ## Considerazioni
