@@ -16,4 +16,4 @@ Una transazione di 0 euro non è considerata valida, non penso sia saggio lascia
 
 Una transazione con mittente e destinatario identici non è considerata valida, non vedo ragione logica di fare questo movimento, e come sopra, intaserebbe i movimenti.
 
-Gli endpoint raggiungibili sono quelli descritti nel [progetto.pdf](https://elearning.unimib.it/pluginfile.php/1343307/mod_resource/content/4/progetto.pdf) tramite localhost:4000/*endpoint*
+Gli endpoint raggiungibili sono quelli descritti nel [progetto.pdf](https://github.com/mattiapezzotti/example-api/blob/main/progetto.pdf) tramite localhost:4000/*endpoint*
