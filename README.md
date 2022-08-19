@@ -1,8 +1,5 @@
 # Intesa San Mattia
 
-## Creato da
-Il progetto è stato creato da **Mattia Pezzotti**, *MAT 885965, m.pezzotti3@campus.unimib.it*
-
 ## Scritto in
 Il progetto è stato scritto in **GOLANG** per la parte di *Backend* con il Framework **GinGonic**, l'embedded database creato **Simbd** creato da *Sony Arouje* e la libreria di supporto **UUID** per la generazione di questi.
 
