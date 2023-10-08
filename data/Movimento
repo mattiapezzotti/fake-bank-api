@@ -42,10 +42,17 @@
 		"to": "b62aaa4653e7d8472a36"
 	},
 	{
-		"id": "54ec71f6-5efa-48f4-af70-af0e6ce08a0f",
-		"from": "b62aaa4653e7d8472a36",
-		"to": "63735acf21d99a38de34",
 		"amount": 10,
-		"timestamp": "2022-06-15T16:59:17.3958004+02:00"
+		"from": "b62aaa4653e7d8472a36",
+		"id": "54ec71f6-5efa-48f4-af70-af0e6ce08a0f",
+		"timestamp": "2022-06-15T16:59:17.3958004+02:00",
+		"to": "63735acf21d99a38de34"
+	},
+	{
+		"id": "3a4fb9a2-3607-4629-bf29-38811edc05fc",
+		"from": "5cf7f498467c38cff2cb",
+		"to": "7816b936ce9ac24dbee6",
+		"amount": 25,
+		"timestamp": "2023-10-08T18:03:11.6762771+02:00"
 	}
 ]

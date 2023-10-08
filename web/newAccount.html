@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <title>Intesa San Mattia</title>
+</head>
+<body>
+    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+        <div class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item" href="/">
+                Check Transaction
+            </a>
+            <a class="navbar-item" href="/transfer">
+                Transfer
+              </a>
+            <a class="navbar-item" href="/newAccount">
+                Create Account
+            </a>
+        </div>
+    </nav>
+      
+    <section class="section">
+        <div class="container">
+
+        <h1 class="title">
+            Intesa San Mattia
+        </h1>
+
+        <div class="rows">
+            <div class="column">
+                <h2> Nome: </h2>
+                <input class="input is-primary" type="text" placeholder="Nome" id="name">
+            </div>
+            <div class="column">
+                <h2> Cognome: </h2>
+                <input class="input is-primary" type="text" placeholder="Cognome" id="surname">
+            </div>
+            <div class="column">
+                <h2> Saldo iniziale: </h2>
+                <input class="input is-primary" type="text" placeholder="Saldo" id="saldo">
+            </div>
+        </div>
+
+        <button onclick="createNewAccount()" class="button is-primary mb-3 is-fullwidth">Crea Account</button>
+
+        <div id="result">
+        </div>
+    </section>
+</body>
+<script>
+    function createNewAccount(){
+        const textArea = document.getElementById("result")
+        const url = "/api/account"
+
+        const data = {
+            "name" : document.getElementById("name").value,
+            "surname" : document.getElementById("surname").value,
+            "balance" : parseFloat(document.getElementById("saldo").value)
+        }
+
+        if(data.name === "" || data.surname === "" || data.balance === ""){
+            textArea.setAttribute("class", "notification is-danger")
+            textArea.innerHTML = "Error: Inserire Nome, Cognome e Saldo iniziale"
+            return
+        }
+
+        if(data.balance < 0){
+            textArea.setAttribute("class", "notification is-danger")
+            textArea.innerHTML = "Error: Il Saldo iniziale non può essere negativo"
+            return
+        }
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(json => {
+            if(json['message'].includes("error") || json['message'].includes("Error")){
+                textArea.setAttribute("class", "notification is-danger")
+            }
+            else textArea.setAttribute("class", "notification is-success")
+            
+            textArea.innerHTML = json['message']
+        })
+    }
+</script>
+</html>

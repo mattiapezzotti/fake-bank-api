@@ -84,6 +84,11 @@ func main() {
 		})
 	})
 
+	router.GET("/newAccount", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "newAccount.html", gin.H{	
+		})
+	})
+
 	router.GET("/api/account", getAccounts)
 	router.POST("/api/account", postAccount)
 	router.DELETE("/api/account", deleteAccount)
@@ -148,7 +153,6 @@ func postAccount(c *gin.Context) {
 	}
 
 	newAccount.AccountID = randSeq(20)
-	newAccount.Balance = 0
 
 	driver := database()
 

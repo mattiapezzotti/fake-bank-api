@@ -12,13 +12,16 @@
         <div class="navbar-menu">
           <div class="navbar-start">
             <a class="navbar-item" href="/">
-              Root
+                Check Transaction
             </a>
             <a class="navbar-item" href="/transfer">
-              Transfer
+                Transfer
+              </a>
+            <a class="navbar-item" href="/newAccount">
+                Create Account
             </a>
         </div>
-      </nav>
+    </nav>
 
     <section class="section">
         <div class="container">
@@ -59,6 +62,8 @@
                 <tbody id="Transaction">
                 </tbody>
             </table>
+        </div>
+        <div id="message">
         </div>
     </section>
 </body>
@@ -102,10 +107,12 @@ function check(id){
 
 function createList(json){
     if(json['In-Transaction'] == null && json['Out-Transaction'] == null){
+        document.getElementById("message").setAttribute("class", "notification is-warning")
         document.getElementById("message").innerHTML = "Nessuna transazione"
         return
     }
     if(json['message'] == "ID not valid"){
+        document.getElementById("message").setAttribute("class", "notification is-danger")
         document.getElementById("message").innerHTML = "Errore! ID non valido!"
         return
     }
@@ -170,6 +177,8 @@ function createList(json){
     
     document.getElementById("transTable").appendChild(tbody)
     document.getElementById("Transaction").firstChild.setAttribute("class", "has-text-weight-bold")
+    document.getElementById("message").setAttribute("class", "notification is-success")
+    document.getElementById("message").innerHTML = "Transizione ritrovate con successo!"
 } 
 
 document.addEventListener('DOMContentLoaded', () => {

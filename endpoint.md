@@ -2,7 +2,7 @@
 
 Endpoint raggiungibili.
 
-## /api/account/get
+## /api/account/
 
 ### GET
 Restituisce la lista di tutti gli account nel sistema
