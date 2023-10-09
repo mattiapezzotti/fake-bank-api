@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strings"
 	"time"
-	"errors"
     "fmt"
 
 	"github.com/gin-gonic/gin"
@@ -241,7 +240,7 @@ func getAccountByID(c *gin.Context) {
 	if err := driver.Open(Movimento{}).Where("to", "=", id).Get().AsEntity(&transazioniIn); err != nil{
 		fmt.Println(err)
 	}
-	
+
 	if err := driver.Open(Account{}).Where("id", "=", id).First().AsEntity(&foundAccount); err != nil {
 		log.Print(err)
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID does not exist"})
