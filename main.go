@@ -148,7 +148,7 @@ func getAccounts(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusOK, gin.H{"message": "Accounts retreived correctly", "accounts": accounts})
+	c.IndentedJSON(http.StatusOK, gin.H{"message": "Accounts retrived correctly", "accounts": accounts})
 }
 
 /*

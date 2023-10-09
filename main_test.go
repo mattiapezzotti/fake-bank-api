@@ -21,7 +21,7 @@ func TestPingRoute(t *testing.T) {
 	assert.Equal(t, "pong", w.Body.String())
 }
 
-func TestNewCompanyHandler(t *testing.T) {
+func TestNewAccountCreated(t *testing.T) {
     r := setupRouter()
     r.POST("/account", postAccount)
     account := Account{
