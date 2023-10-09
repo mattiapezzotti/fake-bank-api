@@ -1,12 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
 	"strings"
 	"time"
-    "fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gofrs/uuid"
@@ -111,7 +111,7 @@ func main() {
 
 	err := router.Run("0.0.0.0:4000")
 
-	if(err != nil){
+	if err != nil {
 		fmt.Println(err)
 	}
 }
@@ -233,11 +233,11 @@ func getAccountByID(c *gin.Context) {
 
 	driver := database()
 
-	if err := driver.Open(Movimento{}).Where("from", "=", id).Get().AsEntity(&trasazioniOut); err != nil{
+	if err := driver.Open(Movimento{}).Where("from", "=", id).Get().AsEntity(&trasazioniOut); err != nil {
 		fmt.Println(err)
 	}
 
-	if err := driver.Open(Movimento{}).Where("to", "=", id).Get().AsEntity(&transazioniIn); err != nil{
+	if err := driver.Open(Movimento{}).Where("to", "=", id).Get().AsEntity(&transazioniIn); err != nil {
 		fmt.Println(err)
 	}
 
