@@ -1,10 +1,5 @@
 image: golang:latest
 
-variables:
-  REPO: gitlab.com
-  GROUP: unitestworks
-  PROJECT: 2023_assignment1_ISM
-
 stages:
   - build
   - verify
@@ -18,11 +13,11 @@ build-job:
     - go build .
 
 verify-job:
-  stage: test
+  stage: verify
   image: golangci/golangci-lint:latest
-    allow_failure: false
-    script:
-      - golangci-lint run -v
+  allow_failure: false
+  script:
+    - golangci-lint run -v
 
 test-job:
   stage: test
