@@ -20,6 +20,7 @@ build-job:
 verify-job:
   stage: test
   image: golangci/golangci-lint:latest
+    stage: lint
     allow_failure: false
     script:
       - golangci-lint run -v

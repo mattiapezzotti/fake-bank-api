@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	"errors"
+    "fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gofrs/uuid"
@@ -108,7 +110,11 @@ func main() {
 
 	router.POST("/api/divert", giraTrasnazione)
 
-	router.Run("0.0.0.0:4000")
+	err := router.Run("0.0.0.0:4000")
+
+	if(err != nil){
+		fmt.Println(err)
+	}
 }
 
 /****** api/account ******/
@@ -228,10 +234,14 @@ func getAccountByID(c *gin.Context) {
 
 	driver := database()
 
-	driver.Open(Movimento{}).Where("from", "=", id).Get().AsEntity(&trasazioniOut)
+	if err := driver.Open(Movimento{}).Where("from", "=", id).Get().AsEntity(&trasazioniOut); err != nil{
+		fmt.Println(err)
+	}
 
-	driver.Open(Movimento{}).Where("to", "=", id).Get().AsEntity(&transazioniIn)
-
+	if err := driver.Open(Movimento{}).Where("to", "=", id).Get().AsEntity(&transazioniIn); err != nil{
+		fmt.Println(err)
+	}
+	
 	if err := driver.Open(Account{}).Where("id", "=", id).First().AsEntity(&foundAccount); err != nil {
 		log.Print(err)
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID does not exist"})
