@@ -1,0 +1,33 @@
+image: golang:latest
+
+variables:
+  REPO: gitlab.com
+  GROUP: unitestworks
+  PROJECT: 2023_assignment1_ISM
+
+stages:
+  - build
+  - verify
+  - test
+
+build-job:
+  stage: build
+  script:
+    - go mod download
+    - go mod tidy
+    - go build .
+
+verify-job:
+  stage: test
+  image: golangci/golangci-lint:latest
+    stage: lint
+    allow_failure: false
+    script:
+      - golangci-lint run -v
+
+test-job:
+  stage: test
+  script:
+    - go fmt $(go list ./... | grep -v /vendor/)
+    - go vet $(go list ./... | grep -v /vendor/)
+    - go test -race $(go list ./... | grep -v /vendor/)
