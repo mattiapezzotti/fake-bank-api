@@ -15,6 +15,8 @@ La parte di *Backend* è stata scritta in **GOLANG** con le seguenti librerie:
 
 Per la parte di *Frontend* è stato utilizzato **HTML+CSS+JS** (con CSS gentilmente gestito da [Bulma](https://bulma.io/)) senza framework JS.
 
+I vari endpoint sono descritti [qui](https://gitlab.com/unitestworks/2023_assignment1_ISM/-/blob/develop/endpoint.md).
+
 ## Descrizione Pipeline CI/CD
 Una volta pushato il progetto alla repository verranno automaticamente avviati dei job, nel dettaglio:
 

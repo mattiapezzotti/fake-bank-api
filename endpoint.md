@@ -1,5 +1,4 @@
 # Endpoint
-
 Endpoint raggiungibili.
 
 ## /api/account/
