@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <title>Intesa San Mattia</title>
+</head>
+<body>
+    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+        <div class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item" href="/newAccount">
+                Create Account
+            </a>
+            <a class="navbar-item" href="/transfer">
+                Transfer Money
+            </a>
+            <a class="navbar-item" href="/list">
+                List Accounts
+            </a>
+            <a class="navbar-item" href="/">
+                List Transactions
+            </a>
+            <a class="navbar-item" href="/addFunds">
+                Add Funds
+            </a>
+        </div>
+    </nav>
+
+    <section class="section">
+        <div class="container">
+
+            <h1 class="title is-primary mt-1 m-auto">
+                Intesa San Mattia
+            </h1>
+
+            <table class="table is-primary mt-1 m-auto" id="accountsTable">
+                <thead>
+                    <tr>
+                        <th>ID Conto</th>
+                        <th>Proprietario</th>
+                        <th>Saldo</th>
+                    </tr>
+                    <td id="ID">
+                    </td>
+                    <td id="Owner">
+                    </td>
+                    <td id="Balance">
+                    </td>
+                </thead>
+            </table>
+        </div>
+        <div id="result">
+        </div>
+    </section>
+</body>
+<script>
+
+window.onload= getAccounts()
+
+
+async function getAccounts(){
+    const url = "/api/account/"
+    const text = await fetch(url)
+    .then(response => response.json())
+    .then(json => createList(json))
+    return text
+}
+
+function createList(json){
+    console.log(json)
+
+    const tbody = document.createElement('tbody')
+
+    json['accounts'].forEach(account => {
+        var tr = document.createElement('tr')
+        var tdID = document.createElement('td')
+        var tdOWNER = document.createElement('td')
+        var tdBALANCE = document.createElement('td')
+
+        tdID.innerHTML = account.id;
+        tdOWNER.innerHTML = account.name + " " + account.surname
+        tdBALANCE.innerHTML = account.balance
+
+        tr.appendChild(tdID)
+        tr.appendChild(tdOWNER)
+        tr.appendChild(tdBALANCE)
+
+        tbody.appendChild(tr)
+    });
+
+    document.getElementById("accountsTable").appendChild(tbody)
+
+    document.getElementById("result").setAttribute("class", "notification is-success")
+    document.getElementById("result").innerHTML = "Account ritrovati con successo!"
+} 
+
+document.addEventListener('DOMContentLoaded', () => {
+  (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+    const $notification = $delete.parentNode;
+
+    $delete.addEventListener('click', () => {
+      $notification.parentNode.removeChild($notification);
+    });
+  });
+});
+
+</script>
+</html>

@@ -65,7 +65,7 @@ func UUIDv4() uuid.UUID {
 	return u2
 }
 
-func checkID(s string) bool{
+func checkID(s string) bool {
 	return len(s) == 20
 }
 
@@ -75,18 +75,23 @@ func main() {
 
 	router.LoadHTMLGlob("web/*")
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{	
-		})
+		c.HTML(http.StatusOK, "index.html", gin.H{})
 	})
 
 	router.GET("/transfer", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "transfer.html", gin.H{	
-		})
+		c.HTML(http.StatusOK, "transfer.html", gin.H{})
 	})
 
 	router.GET("/newAccount", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "newAccount.html", gin.H{	
-		})
+		c.HTML(http.StatusOK, "newAccount.html", gin.H{})
+	})
+
+	router.GET("/list", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "list.html", gin.H{})
+	})
+
+	router.GET("/addFunds", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "addFunds.html", gin.H{})
 	})
 
 	router.GET("/api/account", getAccounts)
@@ -178,7 +183,7 @@ func deleteAccount(c *gin.Context) {
 		return
 	}
 
-	if (!checkID(toDelete.AccountID)){
+	if !checkID(toDelete.AccountID) {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID not valid"})
 		return
 	}
@@ -216,7 +221,7 @@ func getAccountByID(c *gin.Context) {
 
 	id := c.Param("id")
 
-	if (!checkID(id)){
+	if !checkID(id) {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID not valid"})
 		return
 	}
@@ -253,7 +258,7 @@ func versamento_prelievo(c *gin.Context) {
 
 	id := c.Param("id")
 
-	if (!checkID(id)){
+	if !checkID(id) {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID not valid"})
 		return
 	}
@@ -309,7 +314,7 @@ func updateWholeOwner(c *gin.Context) {
 
 	id := c.Param("id")
 
-	if (!checkID(id)){
+	if !checkID(id) {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID not valid"})
 		return
 	}
@@ -359,7 +364,7 @@ func updateOwner(c *gin.Context) {
 
 	id := c.Param("id")
 
-	if (!checkID(id)){
+	if !checkID(id) {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID not valid"})
 		return
 	}
@@ -421,7 +426,7 @@ func getOwner(c *gin.Context) {
 	var foundAccount Account
 	id := c.Param("id")
 
-	if (!checkID(id)){
+	if !checkID(id) {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID not valid"})
 		return
 	}
@@ -477,7 +482,7 @@ func trasferimentoDenaro(c *gin.Context) {
 		return
 	}
 
-	if (!checkID(newMovimento.From) || !checkID(newMovimento.To)){
+	if !checkID(newMovimento.From) || !checkID(newMovimento.To) {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Error: ID not valid"})
 		return
 	}

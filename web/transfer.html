@@ -11,14 +11,20 @@
     <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
         <div class="navbar-menu">
           <div class="navbar-start">
-            <a class="navbar-item" href="/">
-                Check Transaction
-            </a>
-            <a class="navbar-item" href="/transfer">
-                Transfer
-              </a>
             <a class="navbar-item" href="/newAccount">
                 Create Account
+            </a>
+            <a class="navbar-item" href="/transfer">
+                Transfer Money
+            </a>
+            <a class="navbar-item" href="/list">
+                List Accounts
+            </a>
+            <a class="navbar-item" href="/">
+                List Transactions
+            </a>
+            <a class="navbar-item" href="/addFunds">
+                Add Funds
             </a>
         </div>
     </nav>
@@ -32,12 +38,15 @@
 
         <div class="columns">
             <div class="column">
+                ID Mittente:
                 <input class="input is-primary" type="text" placeholder="From" id="from">
             </div>
             <div class="column">
+                ID Destinatario:
                 <input class="input is-primary" type="text" placeholder="To" id="to">
             </div>
             <div class="column">
+                Ammontare:
                 <input class="input is-primary" type="text" placeholder="Ammontare" id="soldi">
             </div>
         </div>
@@ -89,7 +98,7 @@
         })
     }
 
-    function check(id){
+function check(id){
     let pattern = /[0-9A-Fa-f]{20}/g
     console.log(id.match(pattern))
     return (id.match(pattern) && id.length == 20) 
