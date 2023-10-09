@@ -70,7 +70,11 @@ func checkID(s string) bool {
 	return len(s) == 20
 }
 
-func main() {
+func main(){
+	setupRouter()
+}
+
+func setupRouter() *gin.Engine {
 	rand.Seed(time.Now().UnixNano())
 	router := gin.Default()
 
@@ -95,6 +99,10 @@ func main() {
 		c.HTML(http.StatusOK, "addFunds.html", gin.H{})
 	})
 
+	router.GET("/ping", func(c *gin.Context) {
+		c.String(200, "pong")
+	})
+
 	router.GET("/api/account", getAccounts)
 	router.POST("/api/account", postAccount)
 	router.DELETE("/api/account", deleteAccount)
@@ -114,6 +122,8 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	return router
 }
 
 /****** api/account ******/
