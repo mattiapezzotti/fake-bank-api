@@ -61,11 +61,9 @@ Scarica tutte le dipendenze, secondo quello descritto nel pre-generato file *go.
 La pipeline viene fermata se vengono rilevati dei problemi nel codice.
 
 ### Running with Docker
-``` 
 - Eseguire direttamente il runnabile da Docker Hub con il comando
   
 ```
 $ docker run -dp 4000:4000 mattiapezzotti/pezzotti-api
-```
-
+``` 
 
