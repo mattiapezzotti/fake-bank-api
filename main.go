@@ -71,11 +71,18 @@ func checkID(s string) bool {
 }
 
 func main(){
-	setupRouter()
+	router := setupRouter()
+
+	err := router.Run("0.0.0.0:4000")
+
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 func setupRouter() *gin.Engine {
 	rand.Seed(time.Now().UnixNano())
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 
 	router.LoadHTMLGlob("web/*")
@@ -117,13 +124,7 @@ func setupRouter() *gin.Engine {
 
 	router.POST("/api/divert", giraTrasnazione)
 
-	err := router.Run("0.0.0.0:4000")
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	return router
+	return router;
 }
 
 /****** api/account ******/
