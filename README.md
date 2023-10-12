@@ -1,65 +1,72 @@
 # Intesa San Mattia
 
-## Endpoint
-Gli endpoint raggiungibili tramite localhost:4000/*endpoint* e sono leggibili [qui](https://github.com/mattiapezzotti/example-api/blob/main/endpoint.md).
+## Membri del Progetto
+Il Gruppo Cool PPS è formato da:
+- Mattia Pezzotti (885965) - m.pezzotti3@campus.unimib.it
+- Nome Cognome (MAT) - email
+- Nome Cognome (MAT) - email
 
-## Scritto in
-Il progetto è stato scritto in **GOLANG** per la parte di *Backend* con il Framework **GinGonic**, l'embedded database creato **Simbd** creato da *Sony Arouje* e la libreria di supporto **UUID** per la generazione di questi.
+## Introduzione al Progetto
+Intesa San Mattia è una piccola applicazione full-stack creata per esercizio e divertimento.
+La parte di *Backend* è stata scritta in **GOLANG** con le seguenti librerie:
+- [Gin Web Framework](https://github.com/gin-gonic/gin) framework per web.
+- [UUID](https://github.com/gofrs/uuid) generatore di ID unici.
+- [simdb](https://github.com/sonyarouje/simdb) piccolo embedded database.
 
 Per la parte di *Frontend* è stato utilizzato **HTML+CSS+JS** (con CSS gentilmente gestito da [Bulma](https://bulma.io/)) senza framework JS.
 
+I vari endpoint sono descritti [qui](https://gitlab.com/unitestworks/2023_assignment1_ISM/-/blob/develop/endpoint.md).
 
-## Considerazioni
-Il database è già popolato con qualche dato di prova, se volete reinizializzarlo basta cancellare entrambi i file nella cartella *data*.  
+## Descrizione Pipeline CI/CD
+Una volta pushato il progetto alla repository verranno automaticamente avviati dei job, nel dettaglio:
 
-La cancellazione di un qualsiasi account non comporta la cancellazione di nessun movimento di quest'ultimo.
+### Cache
+Viene utilizzata una cache per evitare di riscaricare ogni volta i moduli go.
 
-Una transazione di 0 euro non è considerata valida, non penso sia saggio lasciare effettuare transizioni nulle che intaserebbero il database dei movimenti.
-
-
-Una transazione con mittente e destinatario identici non è considerata valida, non vedo ragione logica di fare questo movimento, e come sopra, intaserebbe i movimenti.
-
-## Istruzioni
-
-### Building from Source
-Codice sorgente reperibile in questa [Repo Github](https://github.com/mattiapezzotti/example-api).
-#### GO
-1. Installare **GO**, seguendo le istruzioni riportate nel [sito ufficiale](https://go.dev/doc/install).
-
-2. Aprire il terminale nella cartella del progetto e scrivere 
-``` 
-$ go run .
-``` 
-3. Aprire il proprio browser preferito e scrivere **localhost:4000** nella barra URL
-
-#### Dipendenze
-Se per qualche motivo le dipendenze non vengono installate automaticamente, installarle manualmente:
-- [Gin Web Framework](https://github.com/gin-gonic/gin)
-- [UUID](https://github.com/gofrs/uuid)
-- [simdb](https://github.com/sonyarouje/simdb)
-
-Generalmente sono scaricabili tramite il comando
+### Build
+Vengono richiamate tre istruzioni:
 ```
-$ go get [github-link]
+$ go mod download
 ```
-Se ancora ci sono problemi provare i comendi
+Scarica tutte le dipendenze, secondo quello descritto nel pre-generato file *go.mod*
+
 ```
-$ go tidy mod
+$ go mod tidy
+```
+Sistema le dipendenze in caso ce ne fossero di non utilizzate.
+
+```
 $ go build .
 ```
+Effettua una build vera e propria del progetto, compilando il codice sorgente.
+
+### Verify
+Per verificare che non ci siano problemi con il codice sorgente viene utilizzato un aggregatore di lint: [golangci-lint](https://golangci-lint.run/) pensato appositamente per una pipeline CI/CD.
+
+```
+$ allow_failure: false
+$ golangci-lint run -v
+```
+
+La pipeline viene fermata se vengono rilevati dei problemi nel codice.
+
+### Test
+Per prima cosa viene formattato il file e viene controllato per costrutti sospetti.
+Vengono eseguiti i vari test, sia Unit che Integration per verificare la corretta efficacia sia dei singoli componenti sia del sistema in se.
+
+```
+$ go fmt $(go list ./... | grep -v /vendor/)
+$ go vet $(go list ./... | grep -v /vendor/)
+$ go test -run "Unit"
+$ go test -run "Integration"
+```
+
+Il source code viene formattato, vengono rilevati costrutti non validi e poi vengono avviati i test veri e propri.
 
 ### Running with Docker
-1. Scaricare, installare e aprire [Docker Desktop](https://www.docker.com/products/docker-desktop/) sulla propria macchina.
-    
-2. Scegliere se:
-- Scaricare l' immagine docker ed eseguire il procedimento riportato sopra. L'immagine è reperibile da terminale con 
-```
-$ docker pull mattiapezzotti/pezzotti-api
-``` 
 - Eseguire direttamente il runnabile da Docker Hub con il comando
   
 ```
 $ docker run -dp 4000:4000 mattiapezzotti/pezzotti-api
-```
-
+``` 
 

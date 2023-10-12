@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
@@ -69,8 +70,19 @@ func checkID(s string) bool {
 	return len(s) == 20
 }
 
-func main() {
+func main(){
+	router := setupRouter()
+
+	err := router.Run("0.0.0.0:4000")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+func setupRouter() *gin.Engine {
 	rand.Seed(time.Now().UnixNano())
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 
 	router.LoadHTMLGlob("web/*")
@@ -94,6 +106,10 @@ func main() {
 		c.HTML(http.StatusOK, "addFunds.html", gin.H{})
 	})
 
+	router.GET("/ping", func(c *gin.Context) {
+		c.String(200, "pong")
+	})
+
 	router.GET("/api/account", getAccounts)
 	router.POST("/api/account", postAccount)
 	router.DELETE("/api/account", deleteAccount)
@@ -108,7 +124,7 @@ func main() {
 
 	router.POST("/api/divert", giraTrasnazione)
 
-	router.Run("0.0.0.0:4000")
+	return router;
 }
 
 /****** api/account ******/
@@ -132,7 +148,7 @@ func getAccounts(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusOK, gin.H{"message": "Accounts retreived correctly", "accounts": accounts})
+	c.IndentedJSON(http.StatusOK, gin.H{"message": "Accounts retrived correctly", "accounts": accounts})
 }
 
 /*
@@ -228,9 +244,13 @@ func getAccountByID(c *gin.Context) {
 
 	driver := database()
 
-	driver.Open(Movimento{}).Where("from", "=", id).Get().AsEntity(&trasazioniOut)
+	if err := driver.Open(Movimento{}).Where("from", "=", id).Get().AsEntity(&trasazioniOut); err != nil {
+		fmt.Println(err)
+	}
 
-	driver.Open(Movimento{}).Where("to", "=", id).Get().AsEntity(&transazioniIn)
+	if err := driver.Open(Movimento{}).Where("to", "=", id).Get().AsEntity(&transazioniIn); err != nil {
+		fmt.Println(err)
+	}
 
 	if err := driver.Open(Account{}).Where("id", "=", id).First().AsEntity(&foundAccount); err != nil {
 		log.Print(err)

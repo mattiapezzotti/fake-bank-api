@@ -1,5 +1,4 @@
 # Endpoint
-
 Endpoint raggiungibili.
 
 ## /api/account/
@@ -15,7 +14,7 @@ Crea un nuovo account con i seguenti campi:
 ritorna nel body della risposta il nuovo id dell’account creato.
 
 ### DELETE
- 
+
 Elimina l’account con id specificato dal parametro URL id
 
 ## /api/account/{accountId}
