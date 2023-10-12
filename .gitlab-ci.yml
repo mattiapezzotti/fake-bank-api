@@ -1,5 +1,17 @@
+# latest image using golang
 image: golang:latest
 
+# Global cache paths
+.go-cache:
+  variables:
+    GOPATH: $CI_PROJECT_DIR/.go
+  before_script:
+    - mkdir -p .go
+  cache:
+    paths:
+      - .go/pkg/mod/
+
+# Stages definition
 stages:
   - build
   - verify
@@ -7,13 +19,19 @@ stages:
 
 build-job:
   stage: build
+  extends: .go-cache
   script:
     # download all dependencies declared in go.mod file.
     - go mod download
     # keeps only the used ones.
     - go mod tidy
-    # builds the project
-    - go build .
+    # builds the project and outputs the binary in the newly generated mybinaries folder
+    - mkdir -p mybinaries
+    - go build -o mybinaries ./...
+  artifacts:
+    paths:
+      - mybinaries
+
 
 verify-job:
   stage: verify
@@ -25,10 +43,15 @@ verify-job:
 
 test-job:
   stage: test
+  extends: .go-cache
+  #$(go list ./... | grep -v /vendor/) ignores all files within the vendor folder
   script:
-    # go fmt formats source code.
-    - go fmt
-    # go vet examines source code and reports suspicious constructs.
-    - go vet
-    # go test tests code with provided test files.
-    - go test
+    # formats source code.
+    - go fmt $(go list ./... | grep -v /vendor/)
+    # examines source code and reports suspicious constructs.
+    - go vet $(go list ./... | grep -v /vendor/)
+    # tests code with provided test files.
+    - go test -run "Integration"
+    - go test -run "Unit"
+    # coverage test
+    - go test -cover
