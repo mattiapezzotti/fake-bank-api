@@ -44,6 +44,7 @@ verify-job:
 test-job:
   stage: test
   extends: .go-cache
+  allow_failure: false
   #$(go list ./... | grep -v /vendor/) ignores all files within the vendor folder
   script:
     # formats source code.

@@ -20,6 +20,9 @@ I vari endpoint sono descritti [qui](https://gitlab.com/unitestworks/2023_assign
 ## Descrizione Pipeline CI/CD
 Una volta pushato il progetto alla repository verranno automaticamente avviati dei job, nel dettaglio:
 
+### Cache
+Viene utilizzata una cache per evitare di riscaricare ogni volta i moduli go.
+
 ### Build
 Vengono richiamate tre istruzioni:
 ```
@@ -44,23 +47,21 @@ Per verificare che non ci siano problemi con il codice sorgente viene utilizzato
 $ allow_failure: false
 $ golangci-lint run -v
 ```
-Scarica tutte le dipendenze, secondo quello descritto nel pre-generato file *go.mod*
+
 La pipeline viene fermata se vengono rilevati dei problemi nel codice.
 
 ### Test
+Per prima cosa viene formattato il file e viene controllato per costrutti sospetti.
 Vengono eseguiti i vari test, sia Unit che Integration per verificare la corretta efficacia sia dei singoli componenti sia del sistema in se.
 
 ```
-$ go fmt
-$ go vet
-$ go test unit_test.go
-$ go test int_test.go
+$ go fmt $(go list ./... | grep -v /vendor/)
+$ go vet $(go list ./... | grep -v /vendor/)
+$ go test -run "Unit"
+$ go test -run "Integration"
 ```
 
 Il source code viene formattato, vengono rilevati costrutti non validi e poi vengono avviati i test veri e propri.
-
-Scarica tutte le dipendenze, secondo quello descritto nel pre-generato file *go.mod*
-La pipeline viene fermata se vengono rilevati dei problemi nel codice.
 
 ### Running with Docker
 - Eseguire direttamente il runnabile da Docker Hub con il comando
