@@ -3,7 +3,7 @@
 ## Membri del Progetto
 Il Gruppo Cool PPS è formato da:
 - Mattia Pezzotti (885965) - m.pezzotti3@campus.unimib.it
-- Nome Cognome (MAT) - email
+- Thomas Howard-Grubb (869248) - t.howardgrubb@campus.unimib.it
 - Nome Cognome (MAT) - email
 
 ## Introduzione al Progetto
@@ -62,6 +62,21 @@ $ go test -run "Integration"
 ```
 
 Il source code viene formattato, vengono rilevati costrutti non validi e poi vengono avviati i test veri e propri.
+
+### Package
+Raccoglie le componenti necessari, inclusi il binario, la documentazione (README), i folder data e web, e li impacchetta in un file TAR compresso.
+```
+$ mkdir -p release
+$ cp mybinaries/* release/
+$ cp README.md release/
+$ cp endpoint.md release/
+$ cp -r web release/
+$ cp -r data release/
+$ tar -czf release.tar.gz release/
+
+
+```
+
 
 ### Running with Docker
 - Eseguire direttamente il runnabile da Docker Hub con il comando
