@@ -3,7 +3,7 @@
 ## Membri del Progetto
 Il Gruppo Cool PPS è formato da:
 - Mattia Pezzotti (885965) - m.pezzotti3@campus.unimib.it
-- Nome Cognome (MAT) - email
+- Thomas Howard-Grubb (869248) - t.howardgrubb@campus.unimib.it
 - Nome Cognome (MAT) - email
 
 ## Introduzione al Progetto
