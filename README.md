@@ -66,13 +66,13 @@ Il source code viene formattato, vengono rilevati costrutti non validi e poi ven
 ### Package
 Raccoglie le componenti necessari, inclusi il binario, la documentazione (README), i folder data e web, e li impacchetta in un file TAR compresso.
 ```
-- mkdir -p release
-- cp mybinaries/* release/
-- cp README.md release/
-- cp endpoint.md release/
-- cp -r web release/
-- cp -r data release/
-- tar -czf release.tar.gz release/
+$ mkdir -p release
+$ cp mybinaries/* release/
+$ cp README.md release/
+$ cp endpoint.md release/
+$ cp -r web release/
+$ cp -r data release/
+$ tar -czf release.tar.gz release/
 
 
 ```
