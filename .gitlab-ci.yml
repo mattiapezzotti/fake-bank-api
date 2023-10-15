@@ -16,6 +16,7 @@ stages:
   - build
   - verify
   - test
+  - package
 
 build-job:
   stage: build
@@ -56,3 +57,28 @@ test-job:
     - go test -run "Unit"
     # coverage test
     - go test -cover
+
+
+package-job:
+  stage: package
+  extends: .go-cache
+  script:
+    # create a directory called "release" to organize the packaging process.
+    - mkdir -p release
+    # copy the contents of the "mybinaries" directory into the "release" directory.
+    - cp mybinaries/* release/
+     # copy the README.me.
+    - cp README.md release/
+    # copy the endpoint.me.
+    - cp endpoint.md release/
+    # copy the "web" folder.
+    - cp -r web release/
+    # copy the "data" folder.
+    - cp -r data release/
+
+    # create a compressed TAR archive of the "release" directory.
+    - tar -czf release.tar.gz release/
+  artifacts:
+    paths:
+      # saved artifact
+      - release.tar.gz
