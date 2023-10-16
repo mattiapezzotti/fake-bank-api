@@ -78,6 +78,19 @@ $ tar -czf release.tar.gz release/
 ```
 
 
+### Release
+Prende il file release.tar.gz prodotto dal package-step e lo copia in un Docker container che è costruito a partire dal Dockerfile contenuto nel root del progetto. Attraverso una push il container viene inserito nella container directory di gitlab.
+The release-step only runs after the package-step has correctly ended its execution.
+```
+$ docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+$ docker pull $CI_REGISTRY_IMAGE:latest || true
+$ docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:latest -f Dockerfile .
+$ docker push $CI_REGISTRY_IMAGE:latest
+
+
+```
+
+
 ### Running with Docker
 - Eseguire direttamente il runnabile da Docker Hub con il comando
   
