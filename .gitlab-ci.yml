@@ -1,6 +1,17 @@
 # latest image using golang
 image: golang:latest
 
+# Global cache paths
+.go-cache:
+  variables:
+    GOPATH: $CI_PROJECT_DIR/.go
+  before_script:
+    - mkdir -p .go
+    - export PATH="$PATH:$HOME/go/bin/"
+  cache:
+    paths:
+      - .go/pkg/mod/
+
 # Stages definition
 stages:
   - docs
