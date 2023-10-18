@@ -18,6 +18,7 @@ stages:
   - test
   - package
   - release
+  - docs
 
 build-job:
   stage: build
@@ -59,7 +60,6 @@ test-job:
     # coverage test
     - go test -cover
 
-
 package-job:
   stage: package
   extends: .go-cache
@@ -100,3 +100,11 @@ release-job:
     - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:latest -f Dockerfile .
     - docker push $CI_REGISTRY_IMAGE:latest
 
+docs-job:
+  stage: docs
+  script:
+    - go install golang.org/x/tools/cmd/godoc@latest
+    - godoc -http=:6060 & # Start the GoDoc server in the background
+    - sleep 10  # Wait for a moment to ensure the GoDoc server fully starts
+    - wget -O doc.html http://localhost:6060/pkg   # Generate the documentation and save it to public/doc.html
+    - kill %1  # Stop the GoDoc server
