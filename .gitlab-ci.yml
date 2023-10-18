@@ -18,13 +18,10 @@ stages:
 
 docs-job:
   stage: docs
+  extends: .go-cache
   script:
     - go install golang.org/x/tools/cmd/godoc@latest
     - godoc -http=:6060 & # Start the GoDoc server in the background
     - sleep 5  # Wait for a moment to ensure the GoDoc server fully starts
-    - wget -O public/doc.html http://localhost:6060/pkg/mypackage   # Generate the documentation and save it to public/doc.html
+    - wget -O doc.html http://localhost:6060/pkg/mypackage   # Generate the documentation and save it to public/doc.html
     - kill %1  # Stop the GoDoc server
-  artifacts:
-    paths:
-      - public
-    when: on_success
