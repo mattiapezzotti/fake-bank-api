@@ -13,90 +13,18 @@ image: golang:latest
 
 # Stages definition
 stages:
-  - build
-  - verify
-  - test
-  - package
-  - release
+  - docs
 
-build-job:
-  stage: build
+docs-job:
+  stage: docs
   extends: .go-cache
   script:
-    # download all dependencies declared in go.mod file.
-    - go mod download
-    # keeps only the used ones.
-    - go mod tidy
-    # builds the project and outputs the binary in the newly generated mybinaries folder
-    - mkdir -p mybinaries
-    - go build -o mybinaries ./...
+    - go install -v golang.org/x/tools/cmd/godoc
+    - godoc -http :6060 &  # Start the GoDoc server in the background
+    - sleep 5  # Wait for a moment to ensure the GoDoc server fully starts
+    - wget -O - http://localhost:6060/pkg/mypackage > public/doc.html  # Generate the documentation and save it to public/doc.html
+    - kill %1  # Stop the GoDoc server
   artifacts:
     paths:
-      - mybinaries
-
-
-verify-job:
-  stage: verify
-  image: golangci/golangci-lint:latest
-  allow_failure: false
-  script:
-    # golangci is a Go linters aggregator that statically tests the code. If it fails, the pipeline is stopped.
-    - golangci-lint run -v
-
-test-job:
-  stage: test
-  extends: .go-cache
-  allow_failure: false
-  #$(go list ./... | grep -v /vendor/) ignores all files within the vendor folder
-  script:
-    # formats source code.
-    - go fmt $(go list ./... | grep -v /vendor/)
-    # examines source code and reports suspicious constructs.
-    - go vet $(go list ./... | grep -v /vendor/)
-    # tests code with provided test files.
-    - go test -run "Integration"
-    - go test -run "Unit"
-    # coverage test
-    - go test -cover
-
-
-package-job:
-  stage: package
-  extends: .go-cache
-  script:
-    # create a directory called "release" to organize the packaging process.
-    - mkdir -p release
-    # copy the contents of the "mybinaries" directory into the "release" directory.
-    - cp mybinaries/* release/
-     # copy the README.me.
-    - cp README.md release/
-    # copy the endpoint.me.
-    - cp endpoint.md release/
-    # copy the "web" folder.
-    - cp -r web release/
-    # copy the "data" folder.
-    - cp -r data release/
-
-    # create a compressed TAR archive of the "release" directory.
-    - tar -czf release.tar.gz release/
-  artifacts:
-    paths:
-      # saved artifact
-      - release.tar.gz
-      
-release-job:
-  stage: release
-  # Redefine the job container image
-  image: docker:stable
-  services:
-    - docker:dind
-  cache: {} # Disable cache
-  # Explicit declation of job dependencies to download only their artifacts
-  dependencies:
-    - package-job
-  script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker pull $CI_REGISTRY_IMAGE:latest || true
-    - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:latest -f Dockerfile .
-    - docker push $CI_REGISTRY_IMAGE:latest
-
+      - public
+    when: on_success
