@@ -98,3 +98,14 @@ $ docker push $CI_REGISTRY_IMAGE:latest
 $ docker run -dp 4000:4000 mattiapezzotti/pezzotti-api
 ``` 
 
+### Documentazione
+-Genera la documentazione la salva in un file HTML locale chiamato "doc.html" utilizzando il server GoDoc temporaneamente avviato. 
+
+```
+$ go install golang.org/x/tools/cmd/godoc@latest
+$ godoc -http=:6060 & # Start the GoDoc server in the background
+$ sleep 10  # Wait for a moment to ensure the GoDoc server fully starts
+$ wget -O doc.html http://localhost:6060/pkg   # Generate the documentation and save it to public/doc.html
+$ kill %1  # Stop the GoDoc server
+```
+
