@@ -7,6 +7,7 @@ image: golang:latest
     GOPATH: $CI_PROJECT_DIR/.go
   before_script:
     - mkdir -p .go
+    - export PATH="$PATH:$HOME/go/bin/"
   cache:
     paths:
       - .go/pkg/mod/
@@ -19,7 +20,6 @@ docs-job:
   stage: docs
   script:
     - go install golang.org/x/tools/cmd/godoc@latest
-    - export PATH="$PATH:$HOME/go/bin/"
     - godoc -http=:6060  # Start the GoDoc server in the background
     - sleep 5  # Wait for a moment to ensure the GoDoc server fully starts
     - wget -O - http://localhost:6060/pkg/mypackage > public/doc.html  # Generate the documentation and save it to public/doc.html
