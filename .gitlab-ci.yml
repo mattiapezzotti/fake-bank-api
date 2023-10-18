@@ -17,6 +17,7 @@ stages:
   - verify
   - test
   - package
+  - release
 
 build-job:
   stage: build
@@ -82,3 +83,20 @@ package-job:
     paths:
       # saved artifact
       - release.tar.gz
+      
+release-job:
+  stage: release
+  # Redefine the job container image
+  image: docker:stable
+  services:
+    - docker:dind
+  cache: {} # Disable cache
+  # Explicit declation of job dependencies to download only their artifacts
+  dependencies:
+    - package-job
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:latest -f Dockerfile .
+    - docker push $CI_REGISTRY_IMAGE:latest
+
