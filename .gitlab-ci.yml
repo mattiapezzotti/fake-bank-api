@@ -19,7 +19,7 @@ docs-job:
   stage: docs
   extends: .go-cache
   script:
-    - $GOPATH/bin/ -http=:6060  # Start the GoDoc server in the background
+    - $GOPATH/bin/godoc -http=:6060  # Start the GoDoc server in the background
     - sleep 5  # Wait for a moment to ensure the GoDoc server fully starts
     - wget -O - http://localhost:6060/pkg/mypackage > public/doc.html  # Generate the documentation and save it to public/doc.html
     - kill %1  # Stop the GoDoc server
