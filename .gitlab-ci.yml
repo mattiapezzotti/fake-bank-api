@@ -19,7 +19,6 @@ docs-job:
   stage: docs
   extends: .go-cache
   script:
-    - go mod download golang.org/x/tools
     - go mod tidy
     - go install -v golang.org/x/tools/cmd/godoc
     - godoc -http :6060 &  # Start the GoDoc server in the background
