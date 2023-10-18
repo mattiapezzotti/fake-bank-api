@@ -59,7 +59,6 @@ test-job:
     # coverage test
     - go test -cover
 
-
 package-job:
   stage: package
   extends: .go-cache
@@ -99,7 +98,7 @@ release-job:
     - docker pull $CI_REGISTRY_IMAGE:latest || true
     - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:latest -f Dockerfile .
     - docker push $CI_REGISTRY_IMAGE:latest
-  
+
 docs-job:
   stage: docs
   script:
