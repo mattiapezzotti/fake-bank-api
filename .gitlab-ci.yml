@@ -18,7 +18,6 @@ stages:
 
 docs-job:
   stage: docs
-  extends: .go-cache
   script:
     - go install golang.org/x/tools/cmd/godoc@latest
     - godoc -http=:6060 & # Start the GoDoc server in the background
