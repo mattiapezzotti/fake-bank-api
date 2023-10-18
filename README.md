@@ -4,7 +4,7 @@
 Il Gruppo Cool PPS è formato da:
 - Mattia Pezzotti (885965) - m.pezzotti3@campus.unimib.it
 - Thomas Howard-Grubb (869248) - t.howardgrubb@campus.unimib.it
-- Nome Cognome (MAT) - email
+- Simone Antonio Basile (826512) - s.basile@campus.unimib.it
 
 ## Introduzione al Progetto
 Intesa San Mattia è una piccola applicazione full-stack creata per esercizio e divertimento.
@@ -99,7 +99,7 @@ $ docker run -dp 4000:4000 mattiapezzotti/pezzotti-api
 ``` 
 
 ### Documentazione
--Genera la documentazione la salva in un file HTML locale chiamato "doc.html" utilizzando il server GoDoc temporaneamente avviato. 
+-Genera la documentazione e la salva in un file HTML locale chiamato "doc.html" utilizzando il server GoDoc temporaneamente avviato. 
 
 ```
 $ go install golang.org/x/tools/cmd/godoc@latest
