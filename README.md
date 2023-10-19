@@ -84,7 +84,7 @@ $ docker pull $CI_REGISTRY_IMAGE:latest || true
 $ docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:latest -f Dockerfile .
 $ docker push $CI_REGISTRY_IMAGE:latest
 ```
-#### Dockefile
+### Dockerfile
 Il Dockerfile specifica inanzitutto l'immagine di base per il Docker container:
 ```
 FROM golang:1.15-alpine AS builder
