@@ -38,27 +38,36 @@ $ go build .
 Effettua una build vera e propria del progetto, compilando il codice sorgente.
 
 ### Verify
-Per verificare che non ci siano problemi con il codice sorgente viene utilizzato un aggregatore di lint: [golangci-lint](https://golangci-lint.run/) pensato appositamente per una pipeline CI/CD.
+Per prima cosa viene formattato il file e viene controllato per costrutti sospetti.
 
 ```sh
-$ allow_failure: false
+$ go fmt $(go list ./... | grep -v /vendor/)
+$ go vet $(go list ./... | grep -v /vendor/)
+```
+
+Per verificare che non ci siano problemi con il codice sorgente viene utilizzato un aggregatore di lint: [golangci-lint](https://golangci-lint.run/) pensato appositamente per una pipeline CI/CD. Viene utilizzata una image apposita, sostituendo quella generale.
+
+```sh
 $ golangci-lint run -v
 ```
 
 La pipeline viene fermata se vengono rilevati dei problemi nel codice.
 
+```sh
+$ allow_failure: false
+```
+
 ### Test
-Per prima cosa viene formattato il file e viene controllato per costrutti sospetti.
-Vengono eseguiti i vari test, sia Unit che Integration per verificare la corretta efficacia sia dei singoli componenti sia del sistema in se.
+Vengono eseguiti i vari test, sia Unit che Integration separati in due job, per verificare la corretta efficacia sia dei singoli componenti sia del sistema in se.
 
 ```sh
-$ go fmt $(go list ./... | grep -v /vendor/)
-$ go vet $(go list ./... | grep -v /vendor/)
 $ go test -run "Unit"
 $ go test -run "Integration"
 ```
 
-Il source code viene formattato, vengono rilevati costrutti non validi e poi vengono avviati i test veri e propri.
+Go permette facilmente di separare i test, permettendo di runnare solo i test con determinate stringhe all'interno della firma della funzione.
+
+Anche in questo caso la pipeline viene fermata se i test falliscono.
 
 ### Package
 Raccoglie le componenti necessari, inclusi il binario, la documentazione (README), i folder data e web, e li impacchetta in un file TAR compresso.

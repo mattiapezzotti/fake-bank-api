@@ -15,7 +15,8 @@ image: golang:latest
 stages:
   - build
   - verify
-  - test
+  - unit-test
+  - integration-test
   - package
   - release
   - docs
@@ -42,12 +43,29 @@ verify-job:
   image: golangci/golangci-lint:latest
   allow_failure: false
   script:
+    # formats source code.
+    - go fmt $(go list ./... | grep -v /vendor/)
+    # examines source code and reports suspicious constructs.
+    - go vet $(go list ./... | grep -v /vendor/)
     # golangci is a Go linters aggregator that statically tests the code. If it fails, the pipeline is stopped.
     - golangci-lint run -v
 
 # Test job using a static code custom-made
-test-job:
-  stage: test
+unit-test-job:
+  stage: unit-test
+  extends: .go-cache
+  # Surely the project won't work if tests do not pass
+  allow_failure: false
+  #$(go list ./... | grep -v /vendor/) ignores all files within the vendor folder
+  script:
+    # tests code with provided test files. 
+    # Go test makes it easy to differenciate Int and Unit tests, as it searches for the words between the " " in the function test name.
+    # Results are saved in a file for debug purposes.
+    - go test -run "Unit" > unitTest.out
+
+# Test job using a static code custom-made
+int-test-job:
+  stage: integration-test
   extends: .go-cache
   # Surely the project won't work if tests do not pass
   allow_failure: false
@@ -61,9 +79,6 @@ test-job:
     # Go test makes it easy to differenciate Int and Unit tests, as it searches for the words between the " " in the function test name.
     # Results are saved in a file for debug purposes.
     - go test -run "Integration" > intTest.out
-    - go test -run "Unit" > unitTest.out
-    # coverage test
-    - go test -cover
 
 package-job:
   stage: package
