@@ -50,7 +50,7 @@ verify-job:
     # golangci is a Go linters aggregator that statically tests the code. If it fails, the pipeline is stopped.
     - golangci-lint run -v
 
-# Test job using a static code custom-made
+# Test job using a static custom-made code 
 unit-test-job:
   stage: unit-test
   extends: .go-cache
@@ -63,7 +63,7 @@ unit-test-job:
     # Results are saved in a file for debug purposes.
     - go test -run "Unit" > unitTest.out
 
-# Test job using a static code custom-made
+# Test job using a static custom-made code
 int-test-job:
   stage: integration-test
   extends: .go-cache
@@ -79,6 +79,10 @@ int-test-job:
     # Go test makes it easy to differenciate Int and Unit tests, as it searches for the words between the " " in the function test name.
     # Results are saved in a file for debug purposes.
     - go test -run "Integration" > intTest.out
+  # This tests will only run on main branch
+  only:
+  - main
+
 
 package-job:
   stage: package
