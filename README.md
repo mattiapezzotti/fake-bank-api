@@ -58,7 +58,7 @@ $ allow_failure: false
 ```
 
 ### Test
-Vengono eseguiti i vari test, sia Unit che Integration separati in due job, per verificare la corretta efficacia sia dei singoli componenti sia del sistema in se.
+Vengono eseguiti i vari test, sia Unit che Integration separati in due job, per verificare la corretta efficacia sia dei singoli componenti sia del sistema in se. I test sono separati per questioni di flessibilità e scalabilità futura della pipeline.
 
 ```sh
 $ go test -run "Unit"
@@ -67,7 +67,7 @@ $ go test -run "Integration"
 
 Go permette facilmente di separare i test, permettendo di runnare solo i test con determinate stringhe all'interno della firma della funzione.
 
-Anche in questo caso la pipeline viene fermata se i test falliscono.
+Anche in questo caso la pipeline viene fermata se i test falliscono. I test integration (essendo più dispendiosi degli unit test), vengono runnati solamente sul branch main.
 
 ### Package
 Raccoglie le componenti necessari, inclusi il binario, la documentazione (README), i folder data e web, e li impacchetta in un file TAR compresso.
